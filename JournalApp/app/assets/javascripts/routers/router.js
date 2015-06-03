@@ -1,6 +1,7 @@
 JournalApp.Routers.PostsRouter = Backbone.Router.extend({
   initialize: function (options) {
     this.$rootEl = options.$rootEl;
+    this.collection = new JournalApp.Collections.Posts();
   },
 
   routes: {
@@ -8,15 +9,24 @@ JournalApp.Routers.PostsRouter = Backbone.Router.extend({
     'posts/:id': 'show'
   },
 
-  index: function () {
-    var collection = new JournalApp.Collections.Posts();
-    var view = new JournalApp.Views.PostsIndex({
-      $rootEl: this.$rootEl,
-      collection: collection
-    });
+  _swapView: function (view) {
+    this._currentView && this._currentView.remove();
+    this._currentView = view;
+    this.$rootEl.html(view.render().$el);
   },
 
-  show: function () {
-    
+  index: function () {
+    var view = new JournalApp.Views.PostsIndex({
+      collection: this.collection
+    });
+    this._swapView(view);
+  },
+
+  show: function (id) {
+    var post = this.collection.getOrFetch(id);
+    var postShow = new JournalApp.Views.PostShow({
+      model: post
+    });
+    this._swapView(postShow);
   }
 });
