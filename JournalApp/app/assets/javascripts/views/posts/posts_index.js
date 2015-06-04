@@ -7,7 +7,7 @@ JournalApp.Views.PostsIndex = Backbone.View.extend({
 
     this.collection.fetch({ reset: true });
 
-    this.listenTo(this.collection, "remove reset", this.render);
+    this.listenTo(this.collection, "remove reset sync", this.render);
   },
 
   template: JST['posts/index'],
